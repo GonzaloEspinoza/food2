@@ -2,62 +2,90 @@ package com.example.gonzaloe.restaurant.ItemMenu;
 
 import android.graphics.Bitmap;
 
-import java.util.zip.GZIPInputStream;
-
 
 public class ItemMenuStructure {
 
-    private String foodname;
-    private String urlimg;
-    private int quantity;
+   private String url;
+   private String estado;
+   private String street;
+   private String descripcion;
+   private String precio;
+   private String ciudad;
+
+
     private boolean deleteui;
     private String id;
-    private Bitmap img;
+   private Bitmap img;
 
-    public ItemMenuStructure(String foodname, String urlimg, int quantity, String id){
-        this.foodname = foodname;
-        this.urlimg= urlimg;
-        this.quantity = quantity;
-        this.id =id;
-
+//urlimg,estado,precio,vecindario
+    //int
+    public ItemMenuStructure(String urlimg, String ciudad, String estado, String precio){
+        this.url=urlimg;
+        this.ciudad=ciudad;
+        this.estado=estado;
+        this.street=street;
+        this.descripcion = descripcion;
+        this.precio= precio;
+        this.ciudad = ciudad;
     }
 
 
-    public void setImg(Bitmap img){
-        this.img =img;
+    public void setEstado(String estado){
+        this.estado= estado;
     }
 
-    public void setQuantity(int c){
-        this.quantity = c;
+    public String getEstado() {
+        return this.estado;
+    }
+
+    public void setUrl(String url){
+        this.url= url;
+
+    }
+
+    public void setStreet(String calle){
+        this.street = calle;
+    }
+
+    public void setDescripcion(String des){
+        this.descripcion =des;
+    }
+
+    public void setPrecio(String precio){
+        this.precio=precio;
+    }
+
+    public void setCiudad (String ciudad){
+        this.ciudad=ciudad;
     }
 
 
-    public void setDeleteui(Boolean deleteui){
-        this.deleteui = deleteui;
+    public String getUrlimg(){
+        return this.url;
     }
 
-    public Boolean getDeleteui(){
-        return this.deleteui;
+    public String getStreet() {
+        return this.street;
+    }
+
+    public String getDescripcion(){
+        return this.descripcion;
+    }
+
+    public String getPrecio() {
+        return this.precio;
+    }
+
+    public String getCiudad(){
+        return this.ciudad;
+    }
+
+
+    public void setImg(Bitmap img) {
+        this.img = img;
     }
 
     public Bitmap getImg(){
         return this.img;
     }
-
-    public int getQuantity(){
-        return this.quantity;
-    }
-
-    public String getFoodname(){
-        return this.foodname;
-    }
-
-    public String getUrlimg(){
-        return this.urlimg;
-    }
-
-    public String  getId(){
-        return  this.id;
-    }
-
 }

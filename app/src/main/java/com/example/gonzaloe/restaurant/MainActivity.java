@@ -1,6 +1,7 @@
 package com.example.gonzaloe.restaurant;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.gonzaloe.restaurant.ItemMenu.ItemMenuStructure;
 import com.example.gonzaloe.restaurant.ItemMenu.MenuBaseAdapter;
@@ -25,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -33,14 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView LIST;
     private ArrayList<ItemMenuStructure> LISTINFO;
-    private MenuBaseAdapter ADAPTER;
     private Context root;
+    private MenuBaseAdapter ADAPTER;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        root=this;
+        root = this;
+
         LISTINFO = new ArrayList<ItemMenuStructure>();
 
         super.onCreate(savedInstanceState);
@@ -57,48 +61,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //loadInitialRestData();
-        loadData();
+        //loadData();
+        loadComponents();
+
     }
 
-    private void loadInitialRestData(String keystr) {
+
+    private void loadData(String keysrt) {
+
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://181.114.179.122:7070/api/v1.0/food", new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONArray listData = response.getJSONArray("info");
-                    for (int i = 0; i < listData.length();i++){
-                        JSONObject obj = listData.getJSONObject(i);
-                        String name = obj.getString("name");
-                        String url = obj.getString("avatar");
-                        int cantidad = obj.getInt("quanity");
-                        String id = obj.getString("id");
 
-                        ItemMenuStructure list = new ItemMenuStructure(name,url,cantidad,id);
-                        LISTINFO.add(list);
+        String url="http://192.168.1.5:4030/api/v1.0/home2/search="+keysrt;
 
-                    }
-                    ADAPTER =new MenuBaseAdapter(root,LISTINFO);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+        //Toast.makeText(MainActivity.this, srt, Toast.LENGTH_SHORT).show();
+
+        client.get(url, new JsonHttpResponseHandler(){
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+               try{
+
+                   JSONArray listaData = response.getJSONArray("info");
+
+                   for (int i = 0;i < listaData.length();i++){
+                       JSONObject obj = listaData.getJSONObject(i);
+
+                       String url = (String)obj.getJSONArray("gallery").get(0);
+                       String id = obj.getString("_id");
+                       String ciudad = obj.getString("city");
+                       String estado =obj.getString("estado");
+                       String cuartos = obj.getString("cuartos");
+                       String baños = obj.getString("baños");
+                       String superfiie = obj.getString("superficie");
+                       String antiguedad = obj.getString("antiguedad");
+                       String calle = obj.getString("street");
+                       String descripcion = obj.getString("descripcion");
+                       String precio = obj.getString("price");
+                       String latitud = obj.getString("lat");
+                       String longitud = obj.getString("lon");
+                       String vecindario = obj.getString("neighborhood");
+
+                       //String contcto = obj.getString("contact");
+
+                       Toast.makeText(MainActivity.this, vecindario, Toast.LENGTH_SHORT).show();
+
+
+                       ItemMenuStructure item = new ItemMenuStructure(url,ciudad,estado,precio);
+
+                       LISTINFO.add(item);
+                   }
+                   ADAPTER = new MenuBaseAdapter(root,LISTINFO);
+                   LIST.setAdapter(ADAPTER);
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+        }
+
         });
 
-
     }
 
 
-    private void loadData() {
+    private void loadComponents() {
 
-        LIST = (ListView) this.findViewById(R.id.foodlist);
-        ADAPTER = new MenuBaseAdapter(this,LISTINFO);
-        LIST.setAdapter(ADAPTER);
+        LIST = (ListView)this.findViewById(R.id.foodlist);
 
-        EditText search =(EditText)this.findViewById(R.id.editText7);
+        EditText search = (EditText)this.findViewById(R.id.searchfood);
 
+        //evesntos_________
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -106,10 +143,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                String str = s.toString();
-                loadInitialRestData(str);
-
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        String str = charSequence.toString();
+                        loadData(str);
             }
 
             @Override
@@ -120,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-                               ////
+
 public class LoaderImg extends AsyncTask<String, Bitmap, Bitmap>{
     private OnLoadComplelmg event;
     private ImageView containerimg;
@@ -48,9 +48,8 @@ public class LoaderImg extends AsyncTask<String, Bitmap, Bitmap>{
     }
 
     protected void onPostExecute(Bitmap img){
-        this.event.OnLoadComplelmgResult(this.containerimg, this.position, img);
+        this.event.OnLoadCompletelmgResult(this.containerimg, this.position, img);
     }
-
 
 
 

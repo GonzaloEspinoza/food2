@@ -1,34 +1,21 @@
 package com.example.gonzaloe.restaurant.ItemMenu;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.preference.PreferenceActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import com.example.gonzaloe.restaurant.R;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.JsonStreamerEntity;
-
-import org.w3c.dom.Text;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.zip.Inflater;
 
 
-public class MenuBaseAdapter extends BaseAdapter implements    OnLoadComplelmg {
+public class MenuBaseAdapter extends BaseAdapter implements OnLoadComplelmg {
 
     private ArrayList<ItemMenuStructure> list;
     private ArrayList<TextView> counter;
@@ -71,13 +58,20 @@ public class MenuBaseAdapter extends BaseAdapter implements    OnLoadComplelmg {
             convertView = inflater.inflate(R.layout.itemfood, null);
         }
 
-        TextView txt1 = convertView.findViewById(R.id.textView2);
-        TextView txt2 = convertView.findViewById(R.id.textView3);
-        ImageView img = convertView.findViewById(R.id.imageView2);
+        TextView txt1 = convertView.findViewById(R.id.txtVStadoCasa);
+        TextView txt2 = convertView.findViewById(R.id.txtVprecio);
+        TextView txt3 = convertView.findViewById(R.id.txtVCiudad);
 
-        txt1.setText(this.list.get(position).getFoodname());
-        txt2.setText(this.list.get(position).getQuantity() + "");
+        ImageView img = convertView.findViewById(R.id.imgViewCasa);
+
+        txt1.setText(this.list.get(position).getEstado());
+        txt2.setText(this.list.get(position).getCiudad());
+        txt3.setText(this.list.get(position).getPrecio());
+        //txt4.setText(this.list.get(position).getUrl());
+
+
         counter.add(txt2);
+
         if (this.list.get(position).getImg() == null) {
 
             LoaderImg loader = new LoaderImg();
@@ -100,7 +94,7 @@ public class MenuBaseAdapter extends BaseAdapter implements    OnLoadComplelmg {
     }
 
     @Override
-    public void OnLoadComplelmgResult(ImageView img, int position, Bitmap imgsourceimg) {
+    public void OnLoadCompletelmgResult(ImageView img, int position, Bitmap imgsourceimg) {
 
         this.list.get(position).setImg(imgsourceimg);
         img.setImageBitmap(imgsourceimg);

@@ -4,6 +4,6 @@ import android.widget.ImageView;
 
 
 public interface OnLoadComplelmg {
-    public void OnLoadComplelmgResult(ImageView img, int position, Bitmap imgsourceimg);
+    public void OnLoadCompletelmgResult(ImageView img, int position, Bitmap imgsourceimg);
 
 }
