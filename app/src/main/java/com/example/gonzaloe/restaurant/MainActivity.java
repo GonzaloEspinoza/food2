@@ -1,6 +1,6 @@
 package com.example.gonzaloe.restaurant;
 
-import android.content.Context;
+import  android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
