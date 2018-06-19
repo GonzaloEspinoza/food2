@@ -1,6 +1,7 @@
 package com.example.gonzaloe.restaurant;
 
 import  android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,6 +14,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,13 +34,16 @@ import java.util.zip.Inflater;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
     private ListView LIST;
     private ArrayList<ItemMenuStructure> LISTINFO;
     private Context root;
     private MenuBaseAdapter ADAPTER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         root = this;
 
         LISTINFO = new ArrayList<ItemMenuStructure>();
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -61,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         //loadData();
         loadComponents();
 
@@ -71,58 +81,59 @@ public class MainActivity extends AppCompatActivity {
 
         AsyncHttpClient client = new AsyncHttpClient();
 
-        String url="http://192.168.1.5:4030/api/v1.0/home2/search="+keysrt;
+        String url = "http://192.168.1.5:4030/api/v1.0/home2/search=" + keysrt;
 
 
         //Toast.makeText(MainActivity.this, srt, Toast.LENGTH_SHORT).show();
 
-        client.get(url, new JsonHttpResponseHandler(){
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        client.get(url, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-               try{
+                try {
 
-                   JSONArray listaData = response.getJSONArray("info");
+                    JSONArray listaData = response.getJSONArray("info");
 
-                   for (int i = 0;i < listaData.length();i++){
-                       JSONObject obj = listaData.getJSONObject(i);
+                    for (int i = 0; i < listaData.length(); i++) {
+                        JSONObject obj = listaData.getJSONObject(i);
 
-                       String url = (String)obj.getJSONArray("gallery").get(0);
-                       String id = obj.getString("_id");
-                       String ciudad = obj.getString("city");
-                       String estado =obj.getString("estado");
-                       String cuartos = obj.getString("cuartos");
-                       String baños = obj.getString("baños");
-                       String superfiie = obj.getString("superficie");
-                       String antiguedad = obj.getString("antiguedad");
-                       String calle = obj.getString("street");
-                       String descripcion = obj.getString("descripcion");
-                       String precio = obj.getString("price");
-                       String latitud = obj.getString("lat");
-                       String longitud = obj.getString("lon");
-                       String vecindario = obj.getString("neighborhood");
+                        String url = (String) obj.getJSONArray("gallery").get(0);
+                        String id = obj.getString("_id");
+                        String ciudad = obj.getString("city");
+                        String estado = obj.getString("estado");
+                        String cuartos = obj.getString("cuartos");
+                        String baños = obj.getString("baños");
+                        String superfiie = obj.getString("superficie");
+                        String antiguedad = obj.getString("antiguedad");
+                        String calle = obj.getString("street");
+                        String descripcion = obj.getString("descripcion");
+                        String precio = obj.getString("price");
+                        double latitud = obj.getDouble("lat");
+                        double longitud = obj.getDouble("lon");
+                        String vecindario = obj.getString("neighborhood");
 
-                       //String contcto = obj.getString("contact");
+                        String contcto = obj.getString("contact");
 
-                       Toast.makeText(MainActivity.this, vecindario, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, vecindario, Toast.LENGTH_SHORT).show();
 
 
-                       ItemMenuStructure item = new ItemMenuStructure(url,ciudad,estado,precio);
+                        ItemMenuStructure item = new ItemMenuStructure(url, id, ciudad, estado, cuartos, baños, superfiie, antiguedad, calle,
+                                descripcion, precio, latitud, longitud, vecindario, contcto);
 
-                       LISTINFO.add(item);
-                   }
-                   ADAPTER = new MenuBaseAdapter(root,LISTINFO);
-                   LIST.setAdapter(ADAPTER);
+                        LISTINFO.add(item);
+                    }
+                    ADAPTER = new MenuBaseAdapter(root, LISTINFO);
+                    LIST.setAdapter(ADAPTER);
 
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               }
-        }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        @Override
-        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-        }
+            }
 
         });
 
@@ -131,10 +142,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadComponents() {
 
-        LIST = (ListView)this.findViewById(R.id.foodlist);
+        LIST = (ListView) this.findViewById(R.id.foodlist);
 
-        EditText search = (EditText)this.findViewById(R.id.searchfood);
+        EditText search = (EditText) this.findViewById(R.id.searchfood);
 
+        //clic enevnt para foodlits
+
+        LIST.setOnItemClickListener(this);
+
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String idhome = root.LISTINFO.get(position).getId();
+//                Intent intent = new Intent(MainActivity.this, MoviDetaild.class);
+//                intent.putExtra("id", idhome);
+//            }
+//        });
         //evesntos_________
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        String str = charSequence.toString();
-                        loadData(str);
+                String str = charSequence.toString();
+                loadData(str);
             }
 
             @Override
@@ -179,5 +201,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //clase que escucha los clic que se realice en los LisView (recoge el id y la posicion)
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String idhome = this.LISTINFO.get(position).getId();
+               Intent intent = new Intent(this, MoviDetaild.class);
+                intent.putExtra("id", idhome);
+                Toast.makeText(getApplicationContext(),idhome,Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+
+    }
 
 }

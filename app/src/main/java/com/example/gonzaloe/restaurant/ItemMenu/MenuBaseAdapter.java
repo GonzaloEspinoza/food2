@@ -60,13 +60,15 @@ public class MenuBaseAdapter extends BaseAdapter implements OnLoadComplelmg {
 
         TextView txt1 = convertView.findViewById(R.id.txtVStadoCasa);
         TextView txt2 = convertView.findViewById(R.id.txtVprecio);
+
         TextView txt3 = convertView.findViewById(R.id.txtVCiudad);
 
         ImageView img = convertView.findViewById(R.id.imgViewCasa);
 
+
         txt1.setText(this.list.get(position).getEstado());
-        txt2.setText(this.list.get(position).getCiudad());
-        txt3.setText(this.list.get(position).getPrecio());
+        txt2.setText(this.list.get(position).getPrecio());
+        txt3.setText(this.list.get(position).getCiudad());
         //txt4.setText(this.list.get(position).getUrl());
 
 
